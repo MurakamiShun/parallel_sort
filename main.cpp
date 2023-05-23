@@ -1,4 +1,3 @@
-
 #define _GLIBCXX_PARALLEL
 #include <iostream>
 #include <vector>
@@ -10,7 +9,7 @@
 #include <chrono>
 
 int main(){
-    std::vector<int> vec(1024*1024*128);
+    std::vector<int> vec(1024*1024*512);
 
     // fill vector with random numbers
     std::srand(unsigned(std::time(nullptr)));
@@ -24,7 +23,7 @@ int main(){
     
     // sort vector
     start = std::chrono::system_clock::now();
-    std::sort(std::execution::par, vec.begin(), vec.end());
+    std::sort(vec.begin(), vec.end());
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - start).count() << "us" << std::endl;
 
     std::cout << (vec == heap_vec) << std::endl;
