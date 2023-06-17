@@ -35,6 +35,12 @@ private:
             th = std::thread([this](){
                 bool task_queue_empty = true;
                 while(not joined){
+                    if(not task_queue_empty) task();
+                    else { // sleep
+                        running = false;
+                        wait_task_cv.notify_all();
+                        running.wait(false);
+                    }
                     { // self task queue
                         std::lock_guard lock(task_queue.mtx);
                         task_queue_empty = task_queue.queue.empty();
@@ -57,12 +63,6 @@ private:
                                 break;
                             }
                         }
-                    }
-                    if(not task_queue_empty) task();
-                    else { // sleep
-                        running = false;
-                        wait_task_cv.notify_all();
-                        running.wait(false);
                     }
                 }
             });
